@@ -31,7 +31,7 @@ public class SendUserInfoController {
 	private final static Logger logger = Logger
 			.getLogger(SendUserInfoController.class);
 	/**
-	 * 注入服务
+	 * 注入服务 
 	 */
 	@Autowired
 	FraudServiceImpl fraudServiceImpl;
