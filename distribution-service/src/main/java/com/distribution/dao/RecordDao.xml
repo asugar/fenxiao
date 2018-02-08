@@ -1,230 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bank9f.sm.server.dao.RecordDao">
+<mapper namespace="com.risk.fraud.dao.RecordDao">
 
-  <resultMap id="BaseResultMap" type="com.bank9f.sm.server.model.Record" >
-    <id column="pk" property="pk" jdbcType="INTEGER" />
-    <result column="send_day" property="send_day" jdbcType="DATE" />
-    <result column="jproduct_id" property="jproduct_id" jdbcType="VARCHAR" />
-    <result column="chn_id" property="chn_id" jdbcType="VARCHAR" />
-    <result column="sm_serial" property="sm_serial" jdbcType="VARCHAR" />
-    <result column="sm_type" property="sm_type" jdbcType="INTEGER" />
-    <result column="qd_no" property="qd_no" jdbcType="VARCHAR" />
-    <result column="send_status" property="send_status" jdbcType="VARCHAR" />
-    <result column="return_status" property="return_status" jdbcType="VARCHAR" />
-    <result column="return_status_detail" property="return_status_detail" jdbcType="VARCHAR" />
-    <result column="msg" property="msg" jdbcType="VARCHAR" />
-    <result column="req_time" property="req_time" jdbcType="DATE" />
-    <result column="send_time" property="send_time" jdbcType="DATE" />
-    <result column="return_time" property="return_time" jdbcType="DATE" />
-    <result column="req_ip" property="req_ip" jdbcType="VARCHAR" />
-    <result column="update_time" property="update_time" jdbcType="DATE" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
-    <result column="sm_serial_mobile" property="sm_serial_mobile" jdbcType="VARCHAR" />
-    <result column="re_send" property="re_send" jdbcType="INTEGER" />
-     <result column="send_type" property="send_type" jdbcType="INTEGER" />
-     <result column="count" property="count" jdbcType="INTEGER" />
-    
-  
-  </resultMap>
-	<!-- <update id="increaseWatchTimes">
-		update article set totalWatchs = totalWatchs+1 where id = #{id}
+	 <resultMap id="BaseResultMap" type="com.risk.fraud.model.ReqRecord" 
+		> </resultMap> 
+
+
+	<insert id="insertRecord" parameterType="com.risk.fraud.model.ReqRecord">
+		insert into t_rd_req_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			pid,req_type,create_time,req_ip,status,status_detail,req_reason,req_data
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{pid},#{req_type},#{create_time},#{req_ip},#{status},#{status_detail},#{req_reason},
+			#{req_data}
+		</trim>
+	</insert>
+
+
+	<update id="updateRecord" parameterType="com.risk.fraud.model.ReqRecord">
+		update t_rd_req_record
+		set
+		<if test="req_type != null">
+			req_type = #{req_type},
+		</if>
+		<if test="create_time != null">
+			create_time = #{create_time},
+		</if>
+		<if test="req_ip != null">
+			req_ip = #{req_ip},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+		<if test="status_detail != null">
+			status_detail=#{status_detail},
+		</if>
+		<if test="req_reason != null">
+			req_reason=#{req_reason},
+		</if>
+		req_data = #{req_data} where pid = #{pid}
 	</update>
-	
-	<select id="findRecommendArticle" resultType="com.taotao.article.model.Article">
-		select * from article where 1=1 
-		<if test="articleTypeId != null">
-			and  articleTypeId=#{articleTypeId} 
-		</if>
-		and isTop='Yes'
-		ORDER BY createDate DESC  LIMIT #{num}
-	</select> -->
-	
-	<insert id="insertRecord" parameterType="com.bank9f.sm.server.model.Record" >
-	    insert into sm_send_record
-	    <trim prefix="(" suffix=")" suffixOverrides="," >
-	        pk,send_day,jproduct_id,chn_id,sm_serial,sm_type,qd_no,send_status,return_status,return_status_detail,
-	        msg,req_time,send_time,return_time,req_ip,update_time,remark,mobile,chn_status,sm_serial_mobile,re_send,count
-	    </trim>
-	    <trim prefix="values (" suffix=")" suffixOverrides="," >
-	        #{pk},#{send_day},#{jproduct_id},#{chn_id},#{sm_serial},#{sm_type},#{qd_no},
-	        #{send_status},#{return_status},#{return_status_detail},#{msg},#{req_time},
-	        #{send_time},#{return_time},#{req_ip},#{update_time},#{remark},#{mobile},#{chn_status},#{sm_serial_mobile},#{re_send},#{count}
-	    </trim>
-	  </insert>
-	  
-	  <insert id="batchInsertRecord" parameterType="java.util.List" >
-	    insert into sm_send_record
-	       (pk,send_day,jproduct_id,chn_id,sm_serial,sm_type,qd_no,send_status,return_status,return_status_detail,
-	        msg,req_time,send_time,return_time,req_ip,update_time,remark,mobile,chn_status,sm_serial_mobile,re_send,count)
-		    values 
-		    <foreach collection="list" item="item" index="index" separator=",">
-			        (#{item.pk},#{item.send_day},#{item.jproduct_id},#{item.chn_id},#{item.sm_serial},#{item.sm_type},#{item.qd_no},
-			        #{item.send_status},#{item.return_status},#{item.return_status_detail},#{item.msg},#{item.req_time},
-			        #{item.send_time},#{item.return_time},#{item.req_ip},#{item.update_time},#{item.remark},#{item.mobile},#{item.chn_status},#{item.sm_serial_mobile},#{item.re_send},#{item.count})
-		     </foreach>
-	  </insert>
-	  
-	  
-	              
-	  <update id="updateRecord" parameterType="com.bank9f.sm.server.model.Record">
-		update sm_send_record 
-		set 
-		<if test="chn_id != null">
-		chn_id = #{chn_id},
-		</if>
-		<if test="sm_type != null">
-		sm_type = #{sm_type},
-		</if>
-		<if test="qd_no != null">
-		qd_no = #{qd_no},
-		</if>
-		<if test="send_status != null">
-		send_status = #{send_status},
-		</if>
-		<if test="send_type != null">
-		send_type=#{send_type},
-		</if>
-		<if test="return_status != null">
-		return_status=#{return_status},
-		</if>
-		<if test="return_time != null">
-		return_time = #{return_time},
-		</if>
-		<if test="update_time != null">
-		update_time = #{update_time},
-		</if>
-		<if test="chn_status != null">
-		chn_status = #{chn_status},
-		</if>
-		<if test="re_send != null">
-		re_send = #{re_send},
-		</if>
-		<if test="remark != null">
-		remark = #{remark},
-		</if>
-		return_status_detail=#{return_status_detail} where sm_serial_mobile = #{sm_serial_mobile}
-	</update>
-	
-	<update id="batchUpdate" parameterType="java.util.List">
-	   update sm_send_record 
-		 <trim prefix="set" suffixOverrides=" " >
-			    <trim prefix="qd_no =case" suffix="end,">
-			      <foreach collection="list" item="item" index="index">
-                       <if test="item.qd_no!=null">
-                        when sm_serial_mobile = #{item.sm_serial_mobile} then #{item.qd_no}
-                       </if>
-                   </foreach>
-			   </trim>
-			   <trim prefix="return_status =case" suffix="end,">
-			      <foreach collection="list" item="item" index="index">
-                       <if test="item.return_status != null">
-                        when sm_serial_mobile = #{item.sm_serial_mobile} then #{item.return_status}
-                       </if>
-                   </foreach>
-			   </trim>
-			   <trim prefix="return_time =case" suffix="end,">
-			      <foreach collection="list" item="item" index="index">
-                       <if test="item.return_time != null">
-                        when sm_serial_mobile = #{item.sm_serial_mobile} then #{item.return_time}
-                       </if>
-                   </foreach>
-			   </trim>
-			   <trim prefix="chn_status =case" suffix="end,">
-			      <foreach collection="list" item="item" index="index">
-                       <if test="item.chn_status != null">
-                        when sm_serial_mobile = #{item.sm_serial_mobile} then #{item.chn_status}
-                       </if>
-                   </foreach>
-			   </trim>
-			   <trim prefix="return_status_detail =case" suffix="end">
-			      <foreach collection="list" item="item" index="index">
-                        when sm_serial_mobile = #{item.sm_serial_mobile} then #{item.return_status_detail}
-                   </foreach>
-			   </trim>
-			   where 
-			   <foreach collection="list" separator="or" item="item" index="index">
-	             (sm_serial_mobile = #{item.sm_serial_mobile})
-	         </foreach>
-		 </trim>
-	</update>
-	
-	
-	
-	 <update id="updateRecordByMobile" parameterType="com.bank9f.sm.server.model.Record">
-		update sm_send_record 
-		set 
-		<if test="chn_id != null">
-		chn_id = #{chn_id},
-		</if>
-		<if test="sm_type != null">
-		sm_type = #{sm_type},
-		</if>
-		<if test="qd_no != null">
-		qd_no = #{qd_no},
-		</if>
-		<if test="send_status != null">
-		send_status = #{send_status},
-		</if>
-		<if test="send_type != null">
-		send_type=#{send_type},
-		</if>
-		<if test="return_status != null">
-		return_status=#{return_status},
-		</if>
-		<if test="return_time != null">
-		return_time = #{return_time},
-		</if>
-		<if test="update_time != null">
-		update_time = #{update_time},
-		</if>
-		<if test="chn_status != null">
-		chn_status = #{chn_status},
-		</if>
-		<if test="sm_serial_mobile != null">
-		sm_serial_mobile = #{sm_serial_mobile},
-		</if>
-		<if test="re_send != null">
-		re_send = #{re_send},
-		</if>
-		<if test="remark != null">
-		remark = #{remark},
-		</if>
-		return_status_detail=#{return_status_detail} where sm_serial = #{sm_serial} and mobile =#{mobile}
-	</update>
-	
-	
-	
-	<select id="findRercordBySmSerialMobile" resultType="com.bank9f.sm.server.model.Record">
-		select * from sm_send_record where 1=1 
-		<if test="sm_serial_mobile != null">
-			and  sm_serial_mobile=#{sm_serial_mobile} 
-		</if>
-	</select>
-	<select id="findRercordBySmSerial" resultType="com.bank9f.sm.server.model.Record">
-		select * from sm_send_record where 1=1 
-		<if test="sm_serial_mobile != null">
-			and  sm_serial=#{sm_serial} 
-		</if>
-	</select>
-	
-	<select id="findBatchRercordBySmSerialMobile" resultType="com.bank9f.sm.server.model.Record">
-		select * from sm_send_record where 1=1 
-		 <if test="sm_serial_mobiles!=null">
-		    and sm_serial_mobile in 
-			<foreach collection="sm_serial_mobiles" open="(" separator="," close=")" item="sm_serial_mobile">
-				#{sm_serial_mobile}
-			</foreach>
-		 </if> 
-	</select>
-	
-	<select id="findBatchRecordByMobileAndDate" resultType="com.bank9f.sm.server.model.Record">
-		select * from sm_send_record where 1=1 
-		 <if test="mobile!=null">
-		    and mobile = #{mobile} and req_time LIKE concat(concat('%',#{date}),'%')
-		 </if> 
-	</select>
-	
+
+
 </mapper>

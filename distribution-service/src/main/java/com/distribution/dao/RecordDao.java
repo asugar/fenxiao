@@ -8,7 +8,7 @@ import com.distribution.model.ReqRecord;
 
 /**
  * 
- * Description:风险欺诈库入库操作记录
+ * Description:
  *
  * @author oyyf
  *
