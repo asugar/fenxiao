@@ -11,9 +11,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.springframework.util.StringUtils;
-
 
 
 public class StringUtil {
